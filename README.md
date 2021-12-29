@@ -13,3 +13,5 @@ docker-installation.sh
 #### [Nextcloud и Onlyoffice](https://github.com/magomedcoder/docker-containers/blob/main/nextcloud-onlyoffice/README.md)
 
 #### [Alpine + SSH](https://github.com/magomedcoder/docker-containers/blob/main/alpine-ssh/README.md)
+
+#### [Alpine + Swoole](https://github.com/magomedcoder/docker-containers/blob/main/alpine-swoole/README.md)
