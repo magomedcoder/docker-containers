@@ -14,7 +14,7 @@ RUN set -ex \
     && apk add --no-cache libstdc++ openssl git bash \
     && apk add --no-cache --virtual .build-deps autoconf dpkg-dev dpkg file g++ gcc libc-dev make php8-dev php8-pear pkgconf re2c pcre-dev pcre2-dev zlib-dev libtool automake libaio-dev openssl-dev curl-dev \
     # Скачать swoole
-    && cd /tmp && curl -SL "https://github.com/swoole/swoole-src/archive/v4.6.7.tar.gz" -o swoole.tar.gz \
+    && cd /tmp && curl -SL "https://github.com/swoole/swoole-src/archive/v4.8.8.tar.gz" -o swoole.tar.gz \
     && ls -alh \
     # php extension:swoole
     && cd /tmp && mkdir -p swoole \
@@ -29,7 +29,7 @@ RUN set -ex \
     && echo "extension=swoole.so" > /etc/php8/conf.d/50_swoole.ini \
     && echo "swoole.use_shortname = 'Off'" >> /etc/php8/conf.d/50_swoole.ini \
     # Устанавливать composer
-    && wget -nv -O /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.0.2/composer.phar \
+    && wget -nv -O /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.3.4/composer.phar \
     && chmod u+x /usr/local/bin/composer \
     # Информация о php
     && php -v \
