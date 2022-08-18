@@ -3,7 +3,7 @@ services:
   cs:
     container_name: cs-1.6
     build:
-      context: .
+      context: ""
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
