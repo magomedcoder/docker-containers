@@ -1,12 +1,18 @@
-FROM alpine:3.16
+FROM alpine:3.18
 
 MAINTAINER Magomedcoder <info@magomedcoder.ru>
 
 # Установка пакетов
-RUN apk --no-cache add php8="8.0.22-r0" php8-ctype php8-curl php8-dom php8-exif php8-fileinfo php8-fpm php8-gd php8-iconv php8-intl php8-mbstring php8-mysqli php8-opcache php8-openssl php8-pecl-imagick php8-pecl-redis php8-phar php8-session php8-simplexml php8-soap php8-xml php8-xmlreader php8-zip php8-zlib php8-pdo php8-xmlwriter php8-tokenizer php8-pdo_mysql php8-pdo_sqlite nginx supervisor curl tzdata htop mysql-client dcron
+RUN set -ex \
+    && apk update \
+    && apk add --no-cache php82 php82-ctype php82-curl php82-dom php82-exif php82-fileinfo php82-fpm php82-gd  \
+    php82-iconv php82-intl php82-mbstring php82-mysqli php82-opcache php82-openssl php82-pecl-imagick php82-pecl-redis  \
+    php82-phar php82-session php82-simplexml php82-soap php82-xml php82-xmlreader php82-zip php82-zlib php82-pdo php82-xmlwriter  \
+    php82-tokenizer php82-pdo_mysql php82-pdo_sqlite nginx supervisor curl tzdata htop mysql-client dcron
 
 # Установка composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN wget -nv -O /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.5.8/composer.phar \
+    && chmod u+x /usr/local/bin/composer
 
 # Настройка nginx,php, fpm-pool, supervisord
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -14,14 +20,9 @@ COPY config/fpm-pool.conf /etc/php8/php-fpm.d/www.conf
 COPY config/php.ini /etc/php8/conf.d/custom.ini
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Настройка пользователя и переключение на него
-RUN mkdir -p /var/www/project
-RUN chown -R nobody.nobody /var/www/project && chown -R nobody.nobody /run && chown -R nobody.nobody /var/lib/nginx && chown -R nobody.nobody /var/log/nginx
-USER nobody
-
 # Копирование проекта в контейнер
 WORKDIR /var/www/project
-COPY --chown=nobody project/ /var/www/project/
+COPY project/ /var/www/project/
 
 EXPOSE 8080
 

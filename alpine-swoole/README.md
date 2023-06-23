@@ -1,5 +1,9 @@
 # Alpine + Swoole
 
-<pre>
-docker build -t magomedcoder/alpine-swoole -f Dockerfile .
-</pre>
+```bash
+docker build -t alpine-swoole .
+```
+
+```bash
+docker run --name alpine-swoole -t alpine-swoole
+```

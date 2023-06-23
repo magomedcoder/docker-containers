@@ -5,5 +5,5 @@ docker build -t alpine-nginx-php .
 ```
 
 ```bash
-docker run -p 8080:80 -t alpine-nginx-php
+docker run -p 8080:80 --name alpine-nginx-php -t alpine-nginx-php
 ```
