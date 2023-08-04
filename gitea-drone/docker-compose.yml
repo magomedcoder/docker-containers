@@ -1,0 +1,90 @@
+version: '3.9'
+
+services:
+  gitea:
+    container_name: gitea
+    image: gitea/gitea:1.20
+    restart: unless-stopped
+    environment:
+      - DB_TYPE=mysql
+      - DB_HOST=mariadb:3306
+      - DB_NAME=gitea
+      - DB_USER=gitea
+      - DB_PASSWD=gitea
+      - USER_UID=1000
+      - USER_GID=1000
+      - RUN_MODE=prod
+      - DOMAIN=${IP_ADDRESS}
+      - HTTP_PORT=3000
+      - ROOT_URL=${GITEA_PROTO_IP_ADDRESS}
+      - SSH_DOMAIN=${IP_ADDRESS}
+      - SSH_PORT=2222
+      - SSH_LISTEN_PORT=22
+    volumes:
+      - ./var/gitea:/data
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    networks:
+      - ci_cd_net
+    depends_on:
+      - mariadb
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.6.14
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gitea
+      MYSQL_USER: gitea
+      MYSQL_PASSWORD: gitea
+    volumes:
+      - ./var/mariadb:/var/lib/mysql
+    networks:
+      - ci_cd_net
+
+  drone:
+    container_name: drone
+    image: drone/drone:2.18.0
+    restart: unless-stopped
+    depends_on:
+      - gitea
+    environment:
+      - DRONE_SERVER_PROTO=http
+      - DRONE_SERVER_HOST=${DRONE_IP_ADDRESS}
+      - DRONE_GIT_ALWAYS_AUTH=false
+      - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
+      - DRONE_TLS_AUTOCERT=false
+      - DRONE_USER_CREATE=${DRONE_USER_CREATE}
+      - DRONE_GITEA_SERVER=${GITEA_PROTO_IP_ADDRESS}/
+      - DRONE_GITEA_CLIENT_ID=${DRONE_GITEA_CLIENT_ID}
+      - DRONE_GITEA_CLIENT_SECRET=${DRONE_GITEA_CLIENT_SECRET}
+    volumes:
+      - ./var/drone:/data
+    ports:
+      - "3001:80"
+    networks:
+      - ci_cd_net
+
+  drone-runner:
+    container_name: drone-runner
+    image: drone/drone-runner-docker:1.8.3
+    restart: unless-stopped
+    environment:
+      - DRONE_RPC_PROTO=http
+      - DRONE_RPC_HOST=drone
+      - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_RUNNER_NAME=drone-runner
+      - DRONE_RUNNER_NETWORKS=ci_cd_net
+      - DRONE_DEBUG=false
+      - DRONE_TRACE=false
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - ci_cd_net
+    depends_on:
+      - drone
+
+networks:
+  ci_cd_net:
