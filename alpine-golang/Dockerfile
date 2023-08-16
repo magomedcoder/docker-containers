@@ -9,8 +9,7 @@ RUN apk update \
     && update-ca-certificates \
     && wget https://dl.google.com/go/go$GOLANG_VERSION.src.tar.gz \
     && tar -C /usr/local -xzf go$GOLANG_VERSION.src.tar.gz \
-    && cd /usr/local/go/src && ./make.bash \
-    && ENV PATH=$PATH:/usr/local/go/bin \
+    && cd /usr/local/go/src\
+    && export ENV PATH=$PATH:/usr/local/go/bin \
     && rm go$GOLANG_VERSION.src.tar.gz \
-    && apk del go \
     && go version

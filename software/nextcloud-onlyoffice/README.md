@@ -5,7 +5,7 @@
 ```bash
 git clone https://github.com/magomedcoder/docker-containers.git
 
-cd nextcloud-onlyoffice
+cd ./software/nextcloud-onlyoffice
 
 chmod 777 *
 
