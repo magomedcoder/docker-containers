@@ -3,7 +3,7 @@ version: '3.9'
 services:
   gitea:
     container_name: gitea
-    image: gitea/gitea:1.20
+    image: gitea/gitea:1.23
     restart: unless-stopped
     environment:
       - DB_TYPE=mysql
@@ -85,6 +85,19 @@ services:
       - ci_cd_net
     depends_on:
       - drone
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./portainer-data:/data
+    ports:
+      - 9000:9000
 
 networks:
   ci_cd_net:

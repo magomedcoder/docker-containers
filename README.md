@@ -1,4 +1,4 @@
-#### Контейнеры
+### Контейнеры
 
 #### [Alpine + SSH](https://github.com/magomedcoder/docker-containers/blob/main/alpine-ssh/README.md)
 
@@ -8,7 +8,16 @@
 
 #### [Alpine + Golang](https://github.com/magomedcoder/docker-containers/blob/main/alpine-golang/README.md)
 
-#### [Gitea + Drone](https://github.com/magomedcoder/docker-containers/blob/main/gitea-drone/README.md)
 ---
 
-#### [Софт](https://github.com/magomedcoder/docker-containers/blob/main/software/README.md)
+### Софт - Контейнеры
+
+#### [Nextcloud + Onlyoffice](https://github.com/magomedcoder/docker-containers/blob/main/software/nextcloud-onlyoffice/README.md)
+
+#### [Docker и Minikube](https://github.com/magomedcoder/docker-containers/blob/main/software/install-docker-and-minikube/README.md)
+
+#### [Asterisk](https://github.com/magomedcoder/docker-containers/blob/main/software/asterisk/README.md)
+
+#### [Gitea + Drone + Portainer](https://github.com/magomedcoder/docker-containers/blob/main/software/gitea-drone-portainer/README.md)
+
+#### [phpLDAPadmin](https://github.com/magomedcoder/docker-containers/blob/main/software/phpldapadmin/README.md)
