@@ -7,7 +7,7 @@ RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu && docker-p
 
 RUN a2enmod rewrite
 
-COPY src/ /var/www/html/
+COPY src /var/www/html/
 
 RUN chown -R www-data:www-data /var/www/html
 

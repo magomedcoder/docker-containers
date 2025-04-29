@@ -1,0 +1,27 @@
+services:
+  freeipa:
+    container_name: freeipa-server
+    image: freeipa/freeipa-server:fedora-42-4.12.2
+    restart: always
+    hostname: ipa.example.test
+    read_only: true
+    environment:
+      IPA_REALM: EXAMPLE.COM
+      IPA_DOMAIN: example.com
+      PASSWORD: admin
+      NO_REDIRECT: true
+    volumes:
+      - ../../../data/freeipa-data:/data:Z
+    ports:
+      - "8080:80"
+      - "4343:443"
+      - "5553:53/udp"        # DNS (UDP)
+      - "5553:53"            # DNS (TCP)
+      - "1088:88/udp"        # Kerberos (UDP)
+      - "1088:88"            # Kerberos (TCP)
+      - "3389:389"           # LDAP
+      - "6636:636"           # LDAPS
+      - "4464:464/udp"       # Kerberos Change/Set password (UDP)
+      - "4464:464"           # Kerberos Change/Set password (TCP)
+      - "7389:7389"          # Directory Server Port
+      - "9443:9443"          # Web UI
