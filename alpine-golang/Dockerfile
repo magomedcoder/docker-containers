@@ -1,8 +1,6 @@
-FROM alpine:3.18
+FROM alpine:3.22
 
-MAINTAINER Magomedcoder <info@magomedcoder.ru>
-
-ARG GOLANG_VERSION=1.20
+ARG GOLANG_VERSION=1.24
 
 RUN apk update \
     && apk add go gcc bash musl-dev openssl-dev ca-certificates \

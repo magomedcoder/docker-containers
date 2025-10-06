@@ -20,4 +20,6 @@
 
 #### [Gitea + Drone + Portainer](https://github.com/magomedcoder/docker-containers/blob/main/software/gitea-drone-portainer/README.md)
 
+#### [Gitea + Woodpecker + Portainer](https://github.com/magomedcoder/docker-containers/blob/main/software/gitea-woodpecker-portainer/README.md)
+
 #### [LDAP](https://github.com/magomedcoder/docker-containers/blob/main/software/ldap/README.md)

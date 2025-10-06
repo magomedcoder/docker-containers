@@ -1,6 +1,4 @@
-FROM alpine:3.18
-
-MAINTAINER Magomedcoder <info@magomedcoder.ru>
+FROM alpine:3.22
 
 RUN apk update  \
     && apk upgrade \
@@ -8,8 +6,8 @@ RUN apk update  \
     && pip install conan  \
     && rm -rf /var/cache/apk/*
 
-WORKDIR /project
+WORKDIR /example-project
 
-VOLUME project
+VOLUME example-project
 
 ENTRYPOINT [ "bash", "-c" ]

@@ -1,6 +1,4 @@
-FROM alpine:3.18
-
-MAINTAINER Magomedcoder <info@magomedcoder.ru>
+FROM alpine:3.22
 
 # Аргумент для пароля
 ARG PASSWORD
@@ -15,7 +13,6 @@ RUN apk --update add --no-cache openssh bash \
 RUN sed -ie 's/#Port 22/Port 22/g' /etc/ssh/sshd_config
 RUN /usr/bin/ssh-keygen -A
 RUN ssh-keygen -t rsa -b 4096 -f  /etc/ssh/ssh_host_key
-ENV NOTVISIBLE "в профиле пользователя"
 
 RUN echo "export VISIBLE=now" >> /etc/profile
 

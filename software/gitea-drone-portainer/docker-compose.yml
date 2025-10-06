@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   gitea:
     container_name: gitea
@@ -14,14 +12,14 @@ services:
       - USER_UID=1000
       - USER_GID=1000
       - RUN_MODE=prod
-      - DOMAIN=${IP_ADDRESS}
+      - DOMAIN=GITEA_DOMAIN
       - HTTP_PORT=3000
-      - ROOT_URL=${GITEA_PROTO_IP_ADDRESS}
-      - SSH_DOMAIN=${IP_ADDRESS}
+      - ROOT_URL=${GITEA_ROOT_URL}
+      - SSH_DOMAIN=GITEA_DOMAIN
       - SSH_PORT=2222
       - SSH_LISTEN_PORT=22
     volumes:
-      - ./var/gitea:/data
+      - ../../data/gitea-drone-portainer/gitea:/data
     ports:
       - "3000:3000"
       - "2222:22"
@@ -39,7 +37,7 @@ services:
       MYSQL_USER: gitea
       MYSQL_PASSWORD: gitea
     volumes:
-      - ./var/mariadb:/var/lib/mysql
+      - ../../data/gitea-drone-portainer/mariadb:/var/lib/mysql
     networks:
       - ci_cd_net
 
@@ -51,16 +49,16 @@ services:
       - gitea
     environment:
       - DRONE_SERVER_PROTO=http
-      - DRONE_SERVER_HOST=${DRONE_IP_ADDRESS}
+      - DRONE_SERVER_HOST=${DRONE_ADDRESS}
       - DRONE_GIT_ALWAYS_AUTH=false
       - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
       - DRONE_TLS_AUTOCERT=false
       - DRONE_USER_CREATE=${DRONE_USER_CREATE}
-      - DRONE_GITEA_SERVER=${GITEA_PROTO_IP_ADDRESS}/
+      - DRONE_GITEA_SERVER=${GITEA_ROOT_URL}/
       - DRONE_GITEA_CLIENT_ID=${DRONE_GITEA_CLIENT_ID}
       - DRONE_GITEA_CLIENT_SECRET=${DRONE_GITEA_CLIENT_SECRET}
     volumes:
-      - ./var/drone:/data
+      - ../../data/gitea-drone-portainer/drone:/data
     ports:
       - "3001:80"
     networks:
@@ -80,7 +78,7 @@ services:
       - DRONE_DEBUG=false
       - DRONE_TRACE=false
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /data/run/docker.sock:/var/run/docker.sock
     networks:
       - ci_cd_net
     depends_on:
@@ -94,7 +92,7 @@ services:
       - no-new-privileges:true
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /data/run/docker.sock:/var/run/docker.sock:ro
       - ./portainer-data:/data
     ports:
       - 9000:9000

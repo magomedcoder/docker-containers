@@ -1,6 +1,4 @@
-FROM alpine:3.18
-
-MAINTAINER Magomedcoder <info@magomedcoder.ru>
+FROM alpine:3.22
 
 RUN set -ex \
     && apk update \
@@ -56,12 +54,12 @@ RUN set -ex \
     && rm -rf /var/cache/apk/* /tmp/* /usr/share/man /usr/local/bin/php* \
     && echo -e "\033[42;37m Завершена \033[0m\n"
 
-WORKDIR /project
+WORKDIR /example-project
 
-COPY /project /project
+COPY /example-project /example-project
 
 #RUN composer install
 
 EXPOSE 9501
 
-ENTRYPOINT ["php", "/project/swoole.php"]
+ENTRYPOINT ["php", "/example-project/swoole.php"]

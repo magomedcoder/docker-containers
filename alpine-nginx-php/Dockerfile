@@ -1,6 +1,4 @@
-FROM alpine:3.18
-
-MAINTAINER Magomedcoder <info@magomedcoder.ru>
+FROM alpine:3.22
 
 # Установка пакетов
 RUN set -ex \
@@ -21,8 +19,8 @@ COPY config/php.ini /etc/php8/conf.d/custom.ini
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Копирование проекта в контейнер
-WORKDIR /var/www/project
-COPY project/ /var/www/project/
+WORKDIR /var/www/example-project
+COPY example-project/ /var/www/example-project/
 
 EXPOSE 8080
 

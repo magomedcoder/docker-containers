@@ -1,7 +1,3 @@
-```bash
-git clone https://github.com/magomedcoder/docker-containers.git
-```
-
 ### phpLDAPadmin
 ```bash
 cd ./software/ldap/phpldapadmin

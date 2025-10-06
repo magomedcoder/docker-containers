@@ -1,6 +1,4 @@
-FROM alpine:3.18
-
-MAINTAINER Magomedcoder <info@magomedcoder.ru>
+FROM alpine:3.22
 
 RUN apk add asterisk asterisk-sample-config asterisk-sounds-en
 

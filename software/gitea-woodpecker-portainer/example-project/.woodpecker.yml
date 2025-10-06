@@ -1,0 +1,44 @@
+steps:
+  install-dependencies:
+    image: node:18-alpine
+    commands:
+      - npm ci
+
+  lint:
+    image: node:18-alpine
+    commands:
+      - npm run lint
+    depends_on:
+      - install-dependencies
+
+  test:
+    image: node:18-alpine
+    commands:
+      - npm test
+    depends_on:
+      - install-dependencies
+
+  build:
+    image: node:18-alpine
+    commands:
+      - npm run build
+    depends_on:
+      - install-dependencies
+
+  deploy-demo:
+    image: alpine
+    commands:
+      - echo "Deploying to demo environment"
+    when:
+      event: push
+      branch: main
+
+  notify-success:
+    image: alpine
+    commands:
+      - echo "All checks passed!"
+      - echo "Tests completed successfully"
+    depends_on:
+      - lint
+      - test
+      - build

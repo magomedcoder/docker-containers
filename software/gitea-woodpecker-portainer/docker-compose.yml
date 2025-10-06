@@ -1,0 +1,98 @@
+services:
+  gitea:
+    image: gitea/gitea:1.24
+    container_name: gitea
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=postgres:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=postgres
+      - GITEA__database__PASSWD=postgres
+      - GITEA__database__SSL_MODE=disable
+      - GITEA__server__DOMAIN=${GITEA_DOMAIN}
+      - GITEA__server__ROOT_URL=${GITEA_ROOT_URL}
+      - GITEA__server__HTTP_PORT=3000
+      - GITEA__server__PROTOCOL=http
+      - GITEA__service__DISABLE_REGISTRATION=false
+      - GITEA__log__LEVEL=info
+      - GITEA__log__ROOT_PATH=/data/gitea/logs
+      - GITEA__repository__ENABLE_PUSH_CREATE_USER=true
+      - GITEA__repository__ENABLE_PUSH_CREATE_ORG=true
+      - GITEA__repository__DEFAULT_BRANCH=main
+    volumes:
+      - ../../data/gitea-woodpecker-portainer/gitea:/data
+    ports:
+      - "3000:3000"
+      - "222:22"
+    networks:
+      - woodpecker-network
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gitea
+    volumes:
+      - ../../data/gitea-woodpecker-portainer/postgres:/var/lib/postgresql/data
+    networks:
+      - woodpecker-network
+
+  woodpecker-server:
+    image: woodpeckerci/woodpecker-server:latest
+    container_name: woodpecker-server
+    restart: unless-stopped
+    environment:
+      - WOODPECKER_OPEN=true
+      - WOODPECKER_HOST=${WOODPECKER_HOST_ADDRESS}
+      - WOODPECKER_GITEA=true
+      - WOODPECKER_GITEA_URL=${GITEA_ROOT_URL}
+      - WOODPECKER_GITEA_CLIENT=${WOODPECKER_GITEA_CLIENT}
+      - WOODPECKER_GITEA_SECRET=${WOODPECKER_GITEA_SECRET}
+      - WOODPECKER_AGENT_SECRET=${WOODPECKER_AGENT_SECRET}
+      - WOODPECKER_LOG_LEVEL=debug
+    volumes:
+      - ../../data/gitea-woodpecker-portainer/woodpecker-server:/var/lib/woodpecker/
+    ports:
+      - "3001:8000"
+    networks:
+      - woodpecker-network
+    depends_on:
+      - gitea
+
+  woodpecker-agent:
+    image: woodpeckerci/woodpecker-agent:latest
+    container_name: woodpecker-agent
+    restart: unless-stopped
+    environment:
+      - WOODPECKER_SERVER=woodpecker-server:9000
+      - WOODPECKER_AGENT_SECRET=${WOODPECKER_AGENT_SECRET}
+      - WOODPECKER_BACKEND=docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - woodpecker-network
+    depends_on:
+      - woodpecker-server
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../../data/gitea-woodpecker-portainer/portainer:/data
+    ports:
+      - 9000:9000
+
+networks:
+  woodpecker-network:
+    driver: bridge
